@@ -16,18 +16,17 @@ const emptyPerformer = { data: { searchPerformer: [] }}
 
 // handle performerResponse
 const performerResponse = (matches) => {
-  const images = matches.map(filename => ({
-    url: `${baseURL}/${filename}`
-  }))
-  const aliases = matches.map(name => name.replace(/( v\d)?\.png/, ""))
-  return {
-    data: { searchPerformer: [{
-      name: aliases[0],
-      aliases: [... new Set(aliases)],
-      images: images,
+  const performers = matches.map(match => {
+    const name = match.replace(/( v\d)?\.png/, "")
+    return {
+      name: name,
+      images: [{
+        url: `${baseURL}/${match}`
+      }],
       measurements: {}
-    }]}
-  }
+    }
+  })
+  return { data: { searchPerformer: performers } }
 }
 
 fastify.post('/graphql', async (request, reply) => {
