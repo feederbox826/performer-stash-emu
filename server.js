@@ -16,16 +16,11 @@ const emptyPerformer = { data: { searchPerformer: [] }}
 
 // handle performerResponse
 const performerResponse = (matches) => {
-  const performers = matches.map(match => {
-    const name = match.replace(/( v\d)?\.png/, "")
-    return {
-      name: name,
-      images: [{
-        url: `${baseURL}/${match}`
-      }],
-      measurements: {}
-    }
-  })
+  const performers = matches.map(match => { return {
+    name: match.replace(/( v\d)?\.png/, ""),
+    images: [{ url: `${baseURL}/${match}` }],
+    measurements: {}
+  }})
   return { data: { searchPerformer: performers } }
 }
 
@@ -35,12 +30,16 @@ fastify.post('/graphql', async (request, reply) => {
   if (operation == "Me") return identityResponse
   else if (operation == "SearchPerformer") {
     const term = request.body?.variables?.term
+    if (!term) return emptyPerformer
     // find all matching images
     const matches = fileNames.filter(name => name.startsWith(term))
     if (!matches.length) return emptyPerformer
     return performerResponse(matches)
   } else {
-    return errorMessage
+    // return empty body with operation
+    const body = {}
+    body[operation] = {}
+    return body
   }
 })
 
