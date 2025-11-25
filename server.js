@@ -17,7 +17,7 @@ const emptyPerformer = { data: { searchPerformer: [] }}
 // handle performerResponse
 const performerResponse = (matches) => {
   const performers = matches.map(match => { return {
-    name: match.replace(/( v\d)?\.png/, ""),
+    name: match.replace(/\.webp/, ""),
     images: [{ url: `${baseURL}/${match}` }],
     measurements: {}
   }})
