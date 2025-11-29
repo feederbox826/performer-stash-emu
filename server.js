@@ -44,8 +44,17 @@ fastify.post('/graphql', async (request, reply) => {
   }
 })
 
-// Declare a route
 fastify.get('/', async function handler (request, reply) { return errorMessage })
+
+// redirect /performers to the image
+fastify.get('/performers/:id', async function handler (request, reply) {
+  const id = decodeURI(request.params.id)
+  if (fileNames.includes(`${id}.webp`)) {
+    return reply.redirect(`${baseURL}/${id}.webp`)
+  } else {
+    return reply.code(404).send({ error: "Performer not found" })
+  }
+})
 
 // Run the server!
 try {
