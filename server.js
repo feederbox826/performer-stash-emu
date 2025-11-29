@@ -16,11 +16,12 @@ const emptyPerformer = { data: { searchPerformer: [] }}
 
 // handle performerResponse
 const performerResponse = (matches) => {
-  const performers = matches.map(match => { return {
+  const performers = matches.map(match => ({
     name: match.replace(/\.webp/, ""),
     images: [{ url: `${baseURL}/${match}` }],
-    measurements: {}
-  }})
+    measurements: {},
+    id: match.replace(/\.webp/, "")
+  }))
   return { data: { searchPerformer: performers } }
 }
 
