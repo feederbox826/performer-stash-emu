@@ -2,10 +2,11 @@
 import Fastify from 'fastify'
 const fastify = Fastify()
 
-import { fileNames } from './files.js'
+import { globSync } from "glob"
 
 // constants
 const baseURL = "https://files.feederbox.cc/share/Lurking987/Adobe%20Transparent%20Edits/"
+const FILES_PATH = "/home/stash/serve/fb/share/Lurking987/Adobe Transparent Edits/**"
 const errorMessage = {
   endpoint: "https://lurking.feederbox.cc/graphql",
   apikey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJhbm9ueW1vdXMiLCJzdWIiOiJBUElLZXkiLCJpYXQiOjB9.WwPu6uCOqRAtz_1WL_tqI5tae2ZhIxdqt4ZMj0pEnGI"
@@ -13,6 +14,10 @@ const errorMessage = {
 // responses
 const identityResponse = { data: { me: { name: "anonymous" }}}
 const emptyPerformer = { data: { searchPerformer: [] }}
+
+// scrape filesnames from glob
+const files = globSync(FILES_PATH)
+const fileNames = files.map(file => file.split("/").pop())
 
 // handle performerResponse
 const performerResponse = (matches) => {
