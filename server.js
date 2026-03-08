@@ -9,7 +9,7 @@ const baseURL = "https://files.feederbox.cc/share/Lurking987/Adobe%20Transparent
 const FILES_PATH = "/home/stash/serve/fb/share/Lurking987/Adobe Transparent Edits/**"
 const errorMessage = {
   endpoint: "https://lurking.feederbox.cc/graphql",
-  apikey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJhbm9ueW1vdXMiLCJzdWIiOiJBUElLZXkiLCJpYXQiOjB9.WwPu6uCOqRAtz_1WL_tqI5tae2ZhIxdqt4ZMj0pEnGI"
+  apikey: "whatever"
 }
 // responses
 const identityResponse = { data: { me: { name: "anonymous" }}}
@@ -18,6 +18,7 @@ const emptyPerformer = { data: { searchPerformer: [] }}
 // scrape filesnames from glob
 const files = globSync(FILES_PATH)
 const fileNames = files.map(file => file.split("/").pop())
+const fileNameSet = new Set(fileNames)
 
 // handle performerResponse
 const performerResponse = (matches) => {
@@ -54,7 +55,7 @@ fastify.get('/', async function handler (request, reply) { return errorMessage }
 // redirect /performers to the image
 fastify.get('/performers/:id', async function handler (request, reply) {
   const id = decodeURI(request.params.id)
-  if (fileNames.includes(`${id}.webp`)) {
+  if (fileNameSet.has(`${id}.webp`)) {
     return reply.redirect(`${baseURL}/${id}.webp`)
   } else {
     return reply.code(404).send({ error: "Performer not found" })
